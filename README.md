@@ -1,7 +1,14 @@
-# Allora Network EDK – Network Evaluation Module
+# Allora Network – HTTP-Based Network Performance Evaluator
+The Allora Network Metrics Evaluator is a lightweight Python tool that measures network performance using HTTP requests instead of traditional ICMP ping (which may not be available in all environments like Codespaces or containers). It helps developers assess average latency, packet loss, and jitter when connecting to a given URL—useful for debugging and optimizing smart agent deployments in the Allora ecosystem.
 
-The **Allora Network Evaluation Module** is a CLI-based tool designed to assess network performance metrics like latency, jitter, throughput, and packet loss. It's ideal for testing Allora node configurations or verifying network conditions in development and deployment environments.
+### ✅ Features
+⚡ Average Latency Measurement
+📉 Packet Loss Detection
+🎯 Jitter Calculation
+🔁 Customizable Attempts
+🌍 Ping-Free Design
 
+---
 
 ### 1. Create a file named:
 ```
@@ -67,8 +74,5 @@ python3 network_metrics.py
 ### Output
 
 <img width="859" height="196" alt="image" src="https://github.com/user-attachments/assets/27c75029-036f-4283-8b70-8f686b81a31f" />
-
-
-
 
     
