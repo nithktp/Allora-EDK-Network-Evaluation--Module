@@ -5,7 +5,8 @@ The **Allora Network Evaluation Module** is a CLI-based tool designed to assess 
 
 ### 1. Create a file named:
 ```
-nano network_metrics
+nano network_metrics.py
+
 ```
 ### 2. Paste the full Python code:
 ```
