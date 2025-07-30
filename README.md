@@ -10,71 +10,43 @@ nano network_metrics.py
 ```
 ### 2. Paste the full Python code:
 ```
-import subprocess
-import platform
-import re
-import statistics
+import time
 import logging
+import statistics
+import requests
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
-def ping_host(host):
-    if platform.system().lower() == "windows":
-        command = ["ping", "-n", "10", host]
-    else:
-        command = ["ping", "-c", "10", host]
-
-    try:
-        output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
-        return output
-    except subprocess.CalledProcessError as e:
-        logging.error("Ping failed: %s", e.output)
-        return None
-
-
-def measure_latency_from_ping(output):
-    # Works for both Linux and Windows average latency formats
-    match = re.search(r'avg(?:/|=)(\d+\.?\d*)', output)
-    if not match:
-        match = re.search(r'Average = (\d+\.?\d*)ms', output)  # For Windows
-    return float(match.group(1)) if match else 0.0
-
-
-def detect_packet_loss_from_ping(output):
-    match = re.search(r'(\d+)% packet loss', output)
-    if not match:
-        match = re.search(r'Lost = \d+ \((\d+)% loss\)', output)  # Windows
-    return int(match.group(1)) if match else 0
-
-
-def measure_jitter_from_ping(output):
-    times = [float(m.group(1)) for m in re.finditer(r'time[=<]([\d.]+)', output)]
-    return round(statistics.stdev(times), 2) if len(times) > 1 else 0.0
-
-
-class NetworkPerformanceEvaluator:
-    def __init__(self, target_host):
-        self.target_host = target_host
+class HTTPNetworkEvaluator:
+    def __init__(self, url, attempts=5):
+        self.url = url
+        self.attempts = attempts
 
     def evaluate(self):
-        output = ping_host(self.target_host)
-        if not output:
-            logging.error("No output received from ping.")
-            return
+        latencies = []
+        for _ in range(self.attempts):
+            try:
+                start = time.time()
+                response = requests.get(self.url, timeout=3)
+                latency = (time.time() - start) * 1000  # ms
+                latencies.append(latency)
+                logging.info(f"Success: {latency:.2f} ms")
+            except requests.RequestException as e:
+                logging.error("Request failed: %s", e)
+        
+        if latencies:
+            avg_latency = sum(latencies) / len(latencies)
+            jitter = statistics.stdev(latencies) if len(latencies) > 1 else 0.0
+            loss = 100 - (len(latencies) / self.attempts) * 100
 
-        latency = measure_latency_from_ping(output)
-        loss = detect_packet_loss_from_ping(output)
-        jitter = measure_jitter_from_ping(output)
-
-        logging.info(f"Results for {self.target_host}:")
-        logging.info(f"Average Latency: {latency} ms")
-        logging.info(f"Packet Loss: {loss}%")
-        logging.info(f"Jitter: {jitter} ms")
-
+            logging.info(f"Average Latency: {avg_latency:.2f} ms")
+            logging.info(f"Packet Loss: {loss:.0f}%")
+            logging.info(f"Jitter: {jitter:.2f} ms")
+        else:
+            logging.error("No successful responses recorded.")
 
 if __name__ == "__main__":
-    evaluator = NetworkPerformanceEvaluator("8.8.8.8")  # You can change the host
+    evaluator = HTTPNetworkEvaluator("https://google.com")
     evaluator.evaluate()
 ```
 ### 3. Save and Close the File
