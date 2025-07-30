@@ -64,10 +64,11 @@ Press CTRL + X to exit
 python3 network_metrics.py
 ```
 ---
-Output
+### Output
+
 <img width="859" height="196" alt="image" src="https://github.com/user-attachments/assets/27c75029-036f-4283-8b70-8f686b81a31f" />
 
----
+
 
 
     
