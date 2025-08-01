@@ -74,5 +74,7 @@ python3 network_metrics.py
 ### Output
 
 <img width="859" height="196" alt="image" src="https://github.com/user-attachments/assets/27c75029-036f-4283-8b70-8f686b81a31f" />
+<img width="1147" height="194" alt="image" src="https://github.com/user-attachments/assets/45b5fe20-e6a9-436f-ab35-32407f08ccd4" />
+
 
     
