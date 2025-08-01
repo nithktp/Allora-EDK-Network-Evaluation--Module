@@ -53,7 +53,7 @@ class HTTPNetworkEvaluator:
             logging.error("No successful responses recorded.")
 
 if __name__ == "__main__":
-    evaluator = HTTPNetworkEvaluator("https://google.com")
+    evaluator = HTTPNetworkEvaluator("https://app.allora.network")
     evaluator.evaluate()
 ```
 ### 3. Save and Close the File
